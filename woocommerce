@@ -1,0 +1,307 @@
+add_action('woocommerce_after_cart_table', 'fee_installment_checkbox_field', 20);
+function fee_installment_checkbox_field()
+{
+	echo '<tr class="installment-section">';
+	echo '	<td colspan="5"><table class="cart-delivery-table custom_table">
+    <thead>
+        <tr>            
+			<th colspan="2">AllBeds Delivery Fees</th>
+        </tr>
+    </thead>
+    <tbody> 	
+		 <tr>
+		     <td> ';
+	?>
+
+	<h5>Sheet Sets, Linen, Pillows, Toppers, Throws & Cooling Pads:</h5>
+
+	<?php
+	woocommerce_form_field('basic_norths', array(
+		'type' => 'checkbox',
+		'class' => array('form-row-wide additonalfee'),
+		'required' => true,
+		'label' => __(' <span class="lable_custom">NZ Standard   </span>     <span class="price_custom">  $18.00</span>'),
+	), WC()->session->get('basic_norths') ? '1' : '');
+
+	woocommerce_form_field('basic_north', array(
+		'type' => 'checkbox',
+		'required' => true,
+		'class' => array('form-row-wide additonalfee'),
+		'label' => __(' <span class="lable_custom">NZ Rural Address  </span>     <span class="price_custom">   $25.00</span>'),
+	), WC()->session->get('basic_north') ? '1' : '');
+	?>
+	<h5>Bed Sets & Mattresses Home Deliveries:</h5>
+	<?php
+	woocommerce_form_field('morethen_oneflight', array(
+		'type' => 'checkbox',
+		'required' => true,
+		'class' => array('form-row-wide additonalfee'),
+		'label' => __('<span class="lable_custom">Collection from Nearest Fliway depot</span>     <span class="price_custom">  $85.00</span>'),
+	), WC()->session->get('morethen_oneflight') ? '1' : '');
+	woocommerce_form_field('outside_north', array(
+		'type' => 'checkbox',
+		'class' => array('form-row-wide additonalfee'),
+		'required' => true,
+		'label' => __('<span class="lable_custom">Northland Home Delivery </span>     <span class="price_custom"> $200.00</span>'),
+	), WC()->session->get('outside_north') ? '1' : '');
+	woocommerce_form_field('removal_old_bed', array(
+		'type' => 'checkbox',
+		'class' => array('form-row-wide additonalfee'),
+		'required' => true,
+		'label' => __('<span class="lable_custom">Whangarei City </span>     <span class="price_custom"> $90.00</span>'),
+	), WC()->session->get('removal_old_bed') ? '1' : '');
+	woocommerce_form_field('adjustable_base', array(
+		'type' => 'checkbox',
+		'class' => array('form-row-wide additonalfee'),
+		'required' => true,
+		'label' => __('<span class="lable_custom">Auckland City  </span>     <span class="price_custom">  $150.00</span>'),
+	), WC()->session->get('adjustable_base') ? '1' : '');
+
+	woocommerce_form_field('removal_old_beds', array(
+		'type' => 'checkbox',
+		'class' => array('form-row-wide additonalfee'),
+		'required' => true,
+		'label' => __('<span class="lable_custom">Rest of North Island</span>     <span class="price_custom"> $250.00</span>'),
+	), WC()->session->get('removal_old_beds') ? '1' : '');
+
+
+	woocommerce_form_field('removal_old_bedss', array(
+		'type' => 'checkbox',
+		'class' => array('form-row-wide additonalfee'),
+		'required' => true,
+		'label' => __('<span class="lable_custom">South Island Metro/City </span>     <span class="price_custom"> $185.00</span>'),
+	), WC()->session->get('removal_old_bedss') ? '1' : '');
+
+	echo '</td></tr> 
+<tr class="last-row"><td colspan="2">Currently Delivery is only available in Auckland</td></tr>	
+	
+	</tbody>
+	</table> </td></tr>';
+}
+
+// jQuery - Ajax script
+add_action('wp_footer', 'woo_add_cart_fee');
+function woo_add_cart_fee()
+{
+	// Only on Checkout
+	if (!is_wc_endpoint_url()):
+
+		if (WC()->session->__isset('adjustable_base'))
+			WC()->session->__unset('adjustable_base')
+				?>
+			<script type="text/javascript">
+				jQuery(function ($) {
+					jQuery('.shop_table_responsive #afterpay_express_button, .cart_totals  .wc-proceed-to-checkout').attr('style', 'color: currentColor; cursor: not-allowed; opacity: 0.5; text-decoration: none; pointer-events: none;');
+
+					var basic_norths = $('input[name=basic_norths]').prop('checked') === true ? '1' : '';
+					var basic_north = $('input[name=basic_north]').prop('checked') === true ? '1' : '';
+					var morethen_oneflight = $('input[name=morethen_oneflight]').prop('checked') === true ? '1' : '';
+					var outside_north = $('input[name=outside_north]').prop('checked') === true ? '1' : '';
+					var removal_old_bed = $('input[name=removal_old_bed]').prop('checked') === true ? '1' : '';
+					var removal_old_beds = $('input[name=removal_old_beds]').prop('checked') === true ? '1' : '';
+					var removal_old_bedss = $('input[name=removal_old_bedss]').prop('checked') === true ? '1' : '';
+					var adjustable_base = $('input[name=adjustable_base]').prop('checked') === true ? '1' : '';
+					if (basic_norths == "" && basic_north == "" && morethen_oneflight == "" && outside_north == "" && removal_old_bed == "" && removal_old_beds == "" && removal_old_bedss == "" && adjustable_base == "") {
+
+
+						jQuery('.shop_table_responsive #afterpay_express_button, .cart_totals  .wc-proceed-to-checkout').attr('style', 'color: currentColor; cursor: not-allowed; opacity: 0.5; text-decoration: none; pointer-events: none;');
+					} else {
+
+						jQuery('.shop_table_responsive #afterpay_express_button, .cart_totals  .wc-proceed-to-checkout').removeAttr("style");
+					}
+
+
+					$(document).on('change', 'input[name=basic_norths],input[name=basic_north],input[name=morethen_oneflight],input[name=outside_north],input[name=removal_old_bed],input[name=removal_old_beds],input[name=removal_old_bedss],input[name=adjustable_base]', function () {
+						var basic_norths = $('input[name=basic_norths]').prop('checked') === true ? '1' : '';
+						var basic_north = $('input[name=basic_north]').prop('checked') === true ? '1' : '';
+						var morethen_oneflight = $('input[name=morethen_oneflight]').prop('checked') === true ? '1' : '';
+						var outside_north = $('input[name=outside_north]').prop('checked') === true ? '1' : '';
+						var removal_old_bed = $('input[name=removal_old_bed]').prop('checked') === true ? '1' : '';
+						var removal_old_beds = $('input[name=removal_old_beds]').prop('checked') === true ? '1' : '';
+						var removal_old_bedss = $('input[name=removal_old_bedss]').prop('checked') === true ? '1' : '';
+						var adjustable_base = $('input[name=adjustable_base]').prop('checked') === true ? '1' : '';
+						$.ajax({
+							type: 'POST',
+							url: wc_add_to_cart_params.ajax_url,
+							data: {
+								'action': 'adjustable_base',
+								'basic_norths': basic_norths,
+								'basic_north': basic_north,
+								'morethen_oneflight': morethen_oneflight,
+								'outside_north': outside_north,
+								'removal_old_bed': removal_old_bed,
+								'removal_old_beds': removal_old_beds,
+								'removal_old_bedss': removal_old_bedss,
+								'adjustable_base': adjustable_base,
+							},
+							success: function (response) {
+
+								var res = jQuery.parseJSON(response);
+
+								if (res.add == 'add') {
+									jQuery(document).ajaxComplete(function () {
+										jQuery('.shop_table_responsive #afterpay_express_button, .cart_totals .wc-proceed-to-checkout').attr('style', 'color: currentColor; cursor: not-allowed; opacity: 0.5; text-decoration: none; pointer-events: none;');
+									});
+
+								} else {
+									jQuery(document).ajaxComplete(function () {
+										jQuery('.shop_table_responsive #afterpay_express_button, .cart_totals  .wc-proceed-to-checkout').removeAttr("style");
+									});
+								} $('body').trigger('added_to_cart');
+							},
+						});
+
+					});
+				});
+			</script>
+		<?php
+	endif;
+
+}
+// Get Ajax request and saving to WC session
+add_action('wp_ajax_adjustable_base', 'get_adjustable_base');
+add_action('wp_ajax_nopriv_adjustable_base', 'get_adjustable_base');
+function get_adjustable_base()
+{
+
+	if (isset($_POST['basic_north'])) {
+		WC()->session->set('basic_north', ($_POST['basic_north'] ? true : false));
+	}
+	if (isset($_POST['basic_norths'])) {
+		WC()->session->set('basic_norths', ($_POST['basic_norths'] ? true : false));
+	}
+	if (isset($_POST['morethen_oneflight'])) {
+		WC()->session->set('morethen_oneflight', ($_POST['morethen_oneflight'] ? true : false));
+	}
+	if (isset($_POST['outside_north'])) {
+		WC()->session->set('outside_north', ($_POST['outside_north'] ? true : false));
+	}
+	if (isset($_POST['removal_old_bed'])) {
+		WC()->session->set('removal_old_bed', ($_POST['removal_old_bed'] ? true : false));
+	}
+	if (isset($_POST['removal_old_beds'])) {
+		WC()->session->set('removal_old_beds', ($_POST['removal_old_beds'] ? true : false));
+	}
+	if (isset($_POST['removal_old_bedss'])) {
+		WC()->session->set('removal_old_bedss', ($_POST['removal_old_bedss'] ? true : false));
+	}
+	if (isset($_POST['adjustable_base'])) {
+		WC()->session->set('adjustable_base', ($_POST['adjustable_base'] ? true : false));
+	}
+	if ($_POST['basic_north'] == "" && $_POST['adjustable_base'] == "" && $_POST['removal_old_bed'] == "" && $_POST['removal_old_bedss'] == "" && $_POST['removal_old_beds'] == "" && $_POST['outside_north'] == "" && $_POST['morethen_oneflight'] == "" && $_POST['basic_norths'] == "") {
+
+		$style['add'] = "add";
+
+	} else {
+
+		$style['add'] = "remove";
+	}
+	echo json_encode($style);
+	die();
+}
+// Add a custom calculated fee conditionally
+add_action('woocommerce_cart_calculate_fees', 'set_adjustable_base');
+function set_adjustable_base($cart)
+{
+	if (is_admin() && !defined('DOING_AJAX'))
+		return;
+
+	if (did_action('woocommerce_cart_calculate_fees') >= 2)
+		return;
+	$fee_amount = array();
+
+	if (1 == WC()->session->get('basic_norths')) {
+		$items_count = WC()->cart->get_cart_contents_count();
+		$fee_label = sprintf(__("ALLBEDS DELIVERY FEES %s %s"), '&times;', $items_count);
+		$fee_amount[] = 18;
+
+	}
+	if (1 == WC()->session->get('basic_north')) {
+		$items_count = WC()->cart->get_cart_contents_count();
+		$fee_label = sprintf(__("ALLBEDS DELIVERY FEES %s %s"), '&times;', $items_count);
+		$fee_amount[] = 25;
+
+	}
+
+	if (1 == WC()->session->get('morethen_oneflight')) {
+		$items_count = WC()->cart->get_cart_contents_count();
+		$fee_label = sprintf(__("ALLBEDS DELIVERY FEES %s %s"), '&times;', $items_count);
+		$fee_amount[] = 85;
+
+	}
+	if (1 == WC()->session->get('outside_north')) {
+		$items_count = WC()->cart->get_cart_contents_count();
+		$fee_label = sprintf(__("ALLBEDS DELIVERY FEES %s %s"), '&times;', $items_count);
+		$fee_amount[] = 200;
+
+	}
+	if (1 == WC()->session->get('removal_old_bed')) {
+		$items_count = WC()->cart->get_cart_contents_count();
+		$fee_label = sprintf(__("ALLBEDS DELIVERY FEES%s %s"), '&times;', $items_count);
+		$fee_amount[] = 90;
+
+	}
+	if (1 == WC()->session->get('removal_old_beds')) {
+		$items_count = WC()->cart->get_cart_contents_count();
+		$fee_label = sprintf(__("ALLBEDS DELIVERY FEES%s %s"), '&times;', $items_count);
+		$fee_amount[] = 250;
+
+	}
+	if (1 == WC()->session->get('removal_old_bedss')) {
+		$items_count = WC()->cart->get_cart_contents_count();
+		$fee_label = sprintf(__("ALLBEDS DELIVERY FEES%s %s"), '&times;', $items_count);
+		$fee_amount[] = 185;
+
+	}
+	if (1 == WC()->session->get('adjustable_base')) {
+		$items_count = WC()->cart->get_cart_contents_count();
+		$fee_label = sprintf(__("ALLBEDS DELIVERY FEES %s %s"), '&times;', $items_count);
+		$fee_amount[] = 150;
+
+	}
+	if (is_array($fee_amount)) {
+		WC()->cart->add_fee("ALLBEDS DELIVERY FEES", array_sum($fee_amount));
+	}
+
+
+}
+add_filter('woocommerce_form_field', 'remove_optional_txt_from_installment_checkbox', 10, 4);
+function remove_optional_txt_from_installment_checkbox($field, $key, $args, $value)
+{
+	// Only on checkout page for Order notes field
+	if ('adjustable_base' === $key) {
+		$optional = '&nbsp;<span class="optional">(' . esc_html__('optional', 'woocommerce') . ')</span>';
+		$field = str_replace($optional, '', $field);
+	}
+	if ('basic_norths' === $key) {
+		$optional = '&nbsp;<span class="optional">(' . esc_html__('optional', 'woocommerce') . ')</span>';
+		$field = str_replace($optional, '', $field);
+	}
+	if ('basic_north' === $key) {
+		$optional = '&nbsp;<span class="optional">(' . esc_html__('optional', 'woocommerce') . ')</span>';
+		$field = str_replace($optional, '', $field);
+	}
+	if ('outside_north' === $key) {
+		$optional = '&nbsp;<span class="optional">(' . esc_html__('optional', 'woocommerce') . ')</span>';
+		$field = str_replace($optional, '', $field);
+	}
+	if ('removal_old_bed' === $key) {
+		$optional = '&nbsp;<span class="optional">(' . esc_html__('optional', 'woocommerce') . ')</span>';
+		$field = str_replace($optional, '', $field);
+	}
+	if ('removal_old_beds' === $key) {
+		$optional = '&nbsp;<span class="optional">(' . esc_html__('optional', 'woocommerce') . ')</span>';
+		$field = str_replace($optional, '', $field);
+	}
+	if ('removal_old_bedss' === $key) {
+		$optional = '&nbsp;<span class="optional">(' . esc_html__('optional', 'woocommerce') . ')</span>';
+		$field = str_replace($optional, '', $field);
+	}
+	if ('morethen_oneflight' === $key) {
+		$optional = '&nbsp;<span class="optional">(' . esc_html__('optional', 'woocommerce') . ')</span>';
+		$field = str_replace($optional, '', $field);
+	}
+
+
+	return $field;
+}
